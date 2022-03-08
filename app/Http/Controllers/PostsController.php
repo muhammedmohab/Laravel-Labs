@@ -1,19 +1,50 @@
 <?php
+
 namespace App\Http\Controllers;
+
+use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostRequest;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Post ;
 use App\Models\User ;
 use Carbon\Carbon ;
 
 class PostsController extends Controller
 {
-
-    function index (){
-        $posts = Post::paginate(2);
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $posts = Post::paginate(20);
         return view("posts",["posts"=>$posts]);
     }
 
-    function store(){
-        $request_data = request()->all();
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        $users=User::all();
+        return view("add",["users"=>$users]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(StorePostRequest $request)
+    {
+        $request_data = $request->validated();
+        // dump(Auth::user()->id);
+        $request_data["user"] = Auth::user()->id;
         $post = new Post();
         $post->title =$request_data["title"];
         $post->discription =$request_data["discription"];
@@ -22,25 +53,43 @@ class PostsController extends Controller
         return to_route("posts.index");
     }
 
-    function view($id){
-        $post = Post::find($id);
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Post  $post
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $post = Post::findOrFail($id);
         $date=Carbon::parse($post['created_at'])->format("d-m-y");
         return view("view",["post"=>$post],["date"=>$date]);
     }
 
-    function add(){
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Models\Post  $post
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
         $users=User::all();
-        return view("add",["users"=>$users]);
-    }
-    
-    function edit($id){
-        $users=User::all();
-        $post = Post::find($id);
+        $post = Post::findOrFail($id);
         return view("update",["post"=>$post,"users"=>$users]);
     }
 
-    function update($id){
-        $updatedpost = Post::find($id);
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Post  $post
+     * @return \Illuminate\Http\Response
+     */
+    public function update(UpdatePostRequest $request,$id)
+    {
+        $validated = $request->validated();
+        $updatedpost = Post::findOrFail($id);
         $updatedpost->title = request("title");
         $updatedpost->discription = request("discription");
         $updatedpost->user_id = request("user");
@@ -48,8 +97,15 @@ class PostsController extends Controller
         return to_route("posts.index");
     }
 
-    function destroy($id){
-        Post::find($id)->delete();
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Post  $post
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        Post::findOrFail($id)->delete();
         return to_route("posts.index");
     }
 }
