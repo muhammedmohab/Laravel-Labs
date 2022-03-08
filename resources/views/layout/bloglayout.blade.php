@@ -21,7 +21,7 @@
           <a class="nav-link" href="{{route("posts.index")}}">All Posts <span class="sr-only">(current)</span></a>
         </li>
       </ul>
-      <button type="button" class="btn btn-success"><a href="{{route("posts.add")}}" style="color: white; text-decoration:none;">Add Post</a> </button>
+      <button type="button" class="btn btn-success"><a href="{{route("posts.create")}}" style="color: white; text-decoration:none;">Add Post</a> </button>
 
     </div>
   </nav>

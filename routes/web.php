@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PostsController ;
+// use App\Http\Controllers\OldPostsController ;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PostsController ;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,16 +20,18 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/posts',[PostsController::class,"index"])->name("posts.index");
-Route::post('/posts',[PostsController::class,"store"])->name("posts.store");
+// Route::get('/posts',[OldPostsController::class,"index"])->name("posts.index");
+// Route::post('/posts',[OldPostsController::class,"store"])->name("posts.store");
 
-Route::get('/posts/add',[PostsController::class,"add"])->name("posts.add");
+// Route::get('/posts/add',[OldPostsController::class,"add"])->name("posts.add");
 
-Route::get("/posts/view/{id}",[PostsController::class,"view"])->name("posts.view");
+// Route::get("/posts/view/{id}",[OldPostsController::class,"view"])->name("posts.view");
 
-Route::get('/posts/update/{id}',[PostsController::class,"edit"])->name("posts.edit");
-Route::put('/posts/update/{id}',[PostsController::class,"update"])->name("posts.update");
+// Route::get('/posts/update/{id}',[OldPostsController::class,"edit"])->name("posts.edit");
+// Route::put('/posts/update/{id}',[OldPostsController::class,"update"])->name("posts.update");
 
-Route::delete('/posts/{id}',[PostsController::class,"destroy"])->name("posts.destroy");
+// Route::delete('/posts/{id}',[OldPostsController::class,"destroy"])->name("posts.destroy");
 
 Route::get("/user/posts/view/{user}", [UserController::class,"userPosts"])->name("user.posts");
+
+Route::resource("posts",PostsController::class);
