@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostsController ;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,3 +31,4 @@ Route::put('/posts/update/{id}',[PostsController::class,"update"])->name("posts.
 
 Route::delete('/posts/{id}',[PostsController::class,"destroy"])->name("posts.destroy");
 
+Route::get("/user/posts/view/{user}", [UserController::class,"userPosts"])->name("user.posts");

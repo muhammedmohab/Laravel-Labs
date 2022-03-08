@@ -12,11 +12,11 @@
     </div>
     <div class="mb-3">
       <label for="exampleInputEmail1" class="form-label text-white">Title</label>
-      <input name="title" value={{ $post->title }} type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
+      <input name="title" value={{ $post->title }} type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" required />
     </div>
     <div class="mb-3">
       <label for="exampleInputPassword1" class="form-label text-white">Description</label>
-      <textarea name="discription"  id="" cols="30" rows="5" class="form-control">{{ $post->discription }}</textarea>
+      <textarea name="discription"  id="" cols="30" rows="5" class="form-control" required>{{ $post->discription }}</textarea>
     </div>
     <div class="mb-3">
       <select value="{{$post->user_id}}" class="form-control" aria-label="Default select example" name="user">
