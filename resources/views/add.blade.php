@@ -1,4 +1,4 @@
-@extends('layout/bloglayout')
+@extends('layouts/app.blade')
 @section('title')
     Add Post
 @endsection

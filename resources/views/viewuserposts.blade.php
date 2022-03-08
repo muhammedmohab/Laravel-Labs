@@ -1,4 +1,4 @@
-@extends('layout/bloglayout')
+@extends('layouts/app')
 @section('title')
     View user posts
 @endsection

@@ -35,3 +35,6 @@ Route::get('/', function () {
 Route::get("/user/posts/view/{user}", [UserController::class,"userPosts"])->name("user.posts");
 
 Route::resource("posts",PostsController::class);
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
