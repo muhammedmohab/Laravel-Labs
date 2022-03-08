@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Post ;
 use App\Models\User ;
 use Carbon\Carbon ;
@@ -42,6 +43,8 @@ class PostsController extends Controller
     public function store(StorePostRequest $request)
     {
         $request_data = $request->validated();
+        // dump(Auth::user()->id);
+        $request_data["user"] = Auth::user()->id;
         $post = new Post();
         $post->title =$request_data["title"];
         $post->discription =$request_data["discription"];
