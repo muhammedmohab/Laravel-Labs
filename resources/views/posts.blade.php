@@ -9,6 +9,7 @@
         <th scope="col">id</th>
         <th scope="col">Title</th>
         <th scope="col">Discription</th>
+        <th scope="col">Slug</th>
         <th scope="col">Day</th>
       </tr>
        @foreach($posts as $post)
@@ -16,6 +17,7 @@
         <td> {{ $post->id }} </td>
         <td> {{ $post->title }} </td>
         <td> {{ $post->discription }} </td>
+        <td> {{ $post->slug }} </td>
         <td> {{ $post->created_at->format("d-m-y") }} </td>
         <td> <a href="{{route("posts.show",$post->id)}}" class="btn btn-info">View</a> </td>
         <td> <a href="{{route("posts.edit",$post->id)}}" class="btn btn-warning">Update</a> </td>

@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use App\Jobs\PruneOldPostsJob;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Cviebrock\EloquentSluggable\Services\SlugService;
 use App\Models\Post ;
 use App\Models\User ;
 use Carbon\Carbon ;
+use Illuminate\Database\Console\PruneCommand;
 
 class PostsController extends Controller
 {
@@ -20,6 +23,8 @@ class PostsController extends Controller
     public function index()
     {
         $posts = Post::paginate(20);
+        $end_old_posts = Post::all();
+        dispatch(new PruneOldPostsJob($end_old_posts));
         return view("posts",["posts"=>$posts]);
     }
 
@@ -46,7 +51,8 @@ class PostsController extends Controller
         // dump(Auth::user()->id);
         $request_data["user"] = Auth::user()->id;
         $post = new Post();
-        $post->title =$request_data["title"];
+        $post->title = $request_data["title"];
+        $post->slug = SlugService::createSlug(Post::class, 'slug', $request_data["title"]);
         $post->discription =$request_data["discription"];
         $post->user_id = $request_data["user"];
         $post->save();
@@ -76,7 +82,11 @@ class PostsController extends Controller
     {
         $users=User::all();
         $post = Post::findOrFail($id);
-        return view("update",["post"=>$post,"users"=>$users]);
+        if($post->user_id != Auth::user()->id){
+            return abort(401);
+        }else{
+            return view("update",["post"=>$post,"users"=>$users]);
+        }
     }
 
     /**
@@ -91,8 +101,9 @@ class PostsController extends Controller
         $validated = $request->validated();
         $updatedpost = Post::findOrFail($id);
         $updatedpost->title = request("title");
+        $updatedpost->slug = SlugService::createSlug(Post::class, 'slug', request("title"));
         $updatedpost->discription = request("discription");
-        $updatedpost->user_id = request("user");
+        $updatedpost->user_id = Auth::user()->id;
         $updatedpost->save();
         return to_route("posts.index");
     }
@@ -105,7 +116,12 @@ class PostsController extends Controller
      */
     public function destroy($id)
     {
-        Post::findOrFail($id)->delete();
-        return to_route("posts.index");
+        $post = Post::findOrFail($id);
+        if($post->user_id != Auth::user()->id){
+            return abort(401);
+        }else{
+            $post->delete();
+            return to_route("posts.index");
+        }
     }
 }

@@ -18,6 +18,7 @@ class PostFactory extends Factory
     {
         return [
             "title"=>$this->faker->title(),
+            "slug"=>$this->faker->slug(),
             "discription"=>$this->faker->text(),
             "user_id"=>2
         ];
