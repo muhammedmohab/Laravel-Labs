@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\numberOfPosts;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StorePostRequest extends FormRequest
@@ -24,9 +25,10 @@ class StorePostRequest extends FormRequest
     public function rules()
     {
         return [
-            "title"=>"required|min:5|unique:posts",
-            "discription"=>"required",
-            "user"=>"required"
+            "title" => "required|min:5|unique:posts",
+            "discription" => "required",
+            "user" => "required",
+            'numberOfPosts' => ['required', new numberOfPosts]
         ];
     }
 }

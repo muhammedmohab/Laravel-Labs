@@ -20,7 +20,12 @@
         <td> {{ $post->slug }} </td>
         <td> {{ $post->created_at->format("d-m-y") }} </td>
         <td> <a href="{{route("posts.show",$post->id)}}" class="btn btn-info">View</a> </td>
-        <td> <a href="{{route("posts.edit",$post->id)}}" class="btn btn-warning">Update</a> </td>
+        @can('isOwner', $post)
+        <td> <a href="{{route("posts.edit",$post->id)}}" class="btn btn-warning">Update</a> </td> 
+        @else
+        <td> <a href="{{route("posts.edit",$post->id)}}" class="btn btn-warning disabled">Update</a> </td> 
+        @endcan
+        @can('isOwner', $post)
         <td>
         <form action={{ route('posts.destroy', [$post['id']]) }} method="POST" class="d-inline">
             @csrf
@@ -29,6 +34,16 @@
           </form>
         </td>
       </tr>
+      @else
+      <td>
+        <form action={{ route('posts.destroy', [$post['id']]) }} method="POST" class="d-inline">
+            @csrf
+            @method("delete")
+            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this item')" disabled>Delete</button>
+          </form>
+        </td>
+      </tr>
+      @endcan
       @endforeach 
   </tbody>
 </table>

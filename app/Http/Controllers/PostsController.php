@@ -5,13 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Jobs\PruneOldPostsJob;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use App\Models\Post ;
 use App\Models\User ;
 use Carbon\Carbon ;
-use Illuminate\Database\Console\PruneCommand;
 
 class PostsController extends Controller
 {
@@ -20,6 +18,7 @@ class PostsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index()
     {
         $posts = Post::paginate(20);
@@ -48,6 +47,12 @@ class PostsController extends Controller
     public function store(StorePostRequest $request)
     {
         $request_data = $request->validated();
+        //increase user number of posts
+        $user = User::findOrFail($request->user);
+        $numberOfPosts = $user->numberOfPosts + 1;
+        // dd($numberOfPosts);
+        $user->numberOfPosts = $numberOfPosts;
+        $user->save();
         // dump(Auth::user()->id);
         $request_data["user"] = Auth::user()->id;
         $post = new Post();
@@ -100,6 +105,7 @@ class PostsController extends Controller
     {
         $validated = $request->validated();
         $updatedpost = Post::findOrFail($id);
+        $this->authorize("owns",$updatedpost);
         $updatedpost->title = request("title");
         $updatedpost->slug = SlugService::createSlug(Post::class, 'slug', request("title"));
         $updatedpost->discription = request("discription");
@@ -120,6 +126,12 @@ class PostsController extends Controller
         if($post->user_id != Auth::user()->id){
             return abort(401);
         }else{
+            $this->authorize("owns",$post);
+            $user = User::findOrFail($post->user_id);
+            $numberOfPosts = $user->numberOfPosts - 1;
+            // dd($numberOfPosts);
+            $user->numberOfPosts = $numberOfPosts;
+            $user->save();
             $post->delete();
             return to_route("posts.index");
         }

@@ -42,6 +42,13 @@
           @endforeach
         </select>
       </div>
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label text-white">Posts so far by you: {{$user->numberOfPosts}}</label>
+        <input name="numberOfPosts" type="hidden" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="{{$user->numberOfPosts}}"/>
+      </div>
+      @if($errors->has('numberOfPosts'))
+          <div class="text-danger">{{ $errors->first('numberOfPosts') }}</div>
+      @endif
     <button type="submit" class="btn btn-success">Submit</button>
       
 </form>

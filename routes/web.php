@@ -32,7 +32,7 @@ Route::get('/', function () {
 
 // Route::delete('/posts/{id}',[OldPostsController::class,"destroy"])->name("posts.destroy");
 
-Route::get("/user/posts/view/{user}", [UserController::class,"userPosts"])->name("user.posts");
+// Route::get("/user/posts/view/{user}", [UserController::class,"userPosts"])->name("user.posts");
 
 Route::resource("posts",PostsController::class)->middleware("auth");
 Auth::routes();
