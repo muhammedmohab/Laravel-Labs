@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
 // use App\Http\Controllers\OldPostsController ;
 use App\Http\Controllers\UserController;
@@ -38,3 +39,9 @@ Route::resource("posts",PostsController::class)->middleware("auth");
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('google',function(){
+
+    Return view('googleAuth');
+});
+Route::get('auth/google', [LoginController::class, 'redirectToGoogle']);
+Route::get('auth/google/callback', [LoginController::class, 'handleGoogleCallback']);

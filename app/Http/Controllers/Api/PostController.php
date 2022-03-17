@@ -8,6 +8,10 @@ use App\Models\Post;
 
 class PostController extends Controller
 {
+
+    public function __construct() {
+        $this->middleware("auth:sanctum")->only("store","update");
+    }
     /**
      * Display a listing of the resource.
      *
@@ -36,6 +40,8 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+        $user = auth("sanctum")->user();
+        $request["user_id"] = $user->id;
         return Post::create(request()->all());
     }
 

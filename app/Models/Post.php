@@ -11,7 +11,7 @@ class Post extends Model
   use HasFactory;
   use Sluggable;
 
-  protected $fillable = ["title","discription","slug","user"];
+  protected $fillable = ["title","discription","slug","user_id"];
 
   public function sluggable():array{
     return[
